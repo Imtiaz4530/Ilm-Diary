@@ -1,0 +1,75 @@
+.navbar {
+  width: 100%;
+  padding: 18px 100px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0c0c0c;
+  border-bottom: 1px solid #1a1a1a;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  font-family: "Reem Kufi", sans-serif;
+  font-size: 24px;
+  color: #4ea685;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+
+.addBtn {
+  background: #4ea685;
+  padding: 10px 22px;
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.addBtn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* ✅ Responsive breakpoints */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 16px 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 14px 30px;
+  }
+
+  .brand {
+    font-size: 20px;
+  }
+
+  .addBtn {
+    padding: 8px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 12px 18px;
+  }
+
+  .brand {
+    font-size: 18px;
+  }
+
+  .addBtn {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
