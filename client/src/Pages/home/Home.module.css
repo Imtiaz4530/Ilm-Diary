@@ -60,6 +60,13 @@
   color: #777;
 }
 
+.refRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
 /* ✅ Search Input */
 .search {
   width: 100%;
@@ -158,4 +165,29 @@
   background: #4ea685 !important;
   color: #0a0a0a !important;
   border-color: #4ea685 !important;
+}
+
+.noData {
+  text-align: center;
+  padding: 40px 20px;
+  background: #111;
+  border: 1px solid #1f1f1f;
+  border-radius: 10px;
+}
+
+.noIcon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.noText {
+  font-size: 18px;
+  color: #4ea685;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.noSub {
+  font-size: 14px;
+  color: #777;
 }

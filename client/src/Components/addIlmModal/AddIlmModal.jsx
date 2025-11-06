@@ -1,7 +1,10 @@
 import { useState } from "react";
 import styles from "./AddIlmModal.module.css";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { createIlmRecord } from "../../api/ilmApi";
 
-const AddIlmModal = ({ onClose, onSubmit }) => {
+const AddIlmModal = ({ onClose }) => {
   const [type, setType] = useState("quran");
   const [formData, setFormData] = useState({
     title: "",
@@ -13,6 +16,22 @@ const AddIlmModal = ({ onClose, onSubmit }) => {
     hadithNo: "",
   });
 
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createIlmRecord,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["stories"]);
+
+      setFormData({ title: "", link: "", content: "" });
+      navigate("/");
+    },
+    onError: () => {
+      alert("❌ Failed to post story. Please try again.");
+    },
+  });
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,9 +39,27 @@ const AddIlmModal = ({ onClose, onSubmit }) => {
     });
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onSubmit(formData);
+  //   onClose();
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const ilmRecordData = {
+      title: formData.title,
+      type: type,
+      arabic: formData.arabic,
+      bangla: formData.bangla,
+      surah: type === "quran" ? formData.surah : null,
+      verse: type === "quran" ? formData.verse : null,
+      book: type === "hadith" ? formData.book : null,
+      hadithNo: type === "hadith" ? formData.hadithNo : null,
+    };
+
+    mutate(ilmRecordData);
     onClose();
   };
 

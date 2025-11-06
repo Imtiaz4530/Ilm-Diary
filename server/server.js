@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+
 const connectDB = require("./db/connectDB");
+const ilmRoutes = require("./routes/ilm.route");
 
 const app = express();
 
@@ -17,6 +19,8 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+
+app.use("/api/ilm", ilmRoutes);
 
 const PORT = process.env.PORT || 3000;
 

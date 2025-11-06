@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Home.module.css";
-import data from "../../data/ilmData.json";
 
-const Home = () => {
-  const [records, setRecords] = useState([]);
+const Home = ({ records }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,11 +12,6 @@ const Home = () => {
 
   const itemsPerPage = 12;
 
-  useEffect(() => {
-    setRecords(data);
-  }, []);
-
-  // ✅ FIX: reset page on search/filter change
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
@@ -53,7 +46,8 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.heading}>📗 Quran /📘 Hadith</h2>
+      {/* <h2 className={styles.heading}>📗 Quran /📘 Hadith</h2> */}
+      <h2 className={styles.heading}>Ilm Records</h2>
 
       <input
         type="text"
@@ -99,28 +93,42 @@ const Home = () => {
       </div>
 
       <div className={styles.list}>
-        {currentRecords.map((item) => (
-          <div
-            className={styles.card}
-            key={item.id}
-            onClick={() => navigate(`/view/${item.id}`)}
-          >
-            <div className={styles.type}>
-              {item.type === "quran" ? "📗 Quran" : "📘 Hadith"}
-            </div>
-
-            <h3 className={styles.title}>{item.title}</h3>
-
-            <p className={styles.arabic}>{limitText(item.arabic, 120)}</p>
-            <p className={styles.bangla}>{limitText(item.bangla, 180)}</p>
-
-            <div className={styles.ref}>
-              {item.type === "quran"
-                ? `Surah ${item.surah} • Ayah ${item.verse}`
-                : `${item.book} • Hadith ${item.hadithNo}`}
-            </div>
+        {currentRecords.length === 0 ? (
+          <div className={styles.noData}>
+            <p className={styles.noIcon}>📭</p>
+            <p className={styles.noText}>কোনো তথ্য পাওয়া যায়নি</p>
+            <p className={styles.noSub}>নতুন একটি রেকর্ড যোগ করুন...</p>
           </div>
-        ))}
+        ) : (
+          currentRecords.map((item) => (
+            <div
+              className={styles.card}
+              key={item._id}
+              onClick={() => navigate(`/view/${item._id}`)}
+            >
+              <div className={styles.type}>
+                {item.type === "quran" ? "📗 Quran" : "📘 Hadith"}
+              </div>
+
+              <h3 className={styles.title}>{item.title}</h3>
+
+              <p className={styles.arabic}>{limitText(item.arabic, 120)}</p>
+              <p className={styles.bangla}>{limitText(item.bangla, 180)}</p>
+
+              <div className={styles.refRow}>
+                <span className={styles.ref}>
+                  {item.type === "quran"
+                    ? `Surah ${item.surah} • Ayah ${item.verse}`
+                    : `${item.book} • Hadith ${item.hadithNo}`}
+                </span>
+
+                <span className={styles.ref}>
+                  {new Date(item.createdAt).toLocaleDateString("bn-BD")}
+                </span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <div className={styles.pagination}>

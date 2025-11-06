@@ -1,13 +1,15 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 
-import data from "../../data/ilmData.json";
 import styles from "./ViewIlm.module.css";
 import EditIlmModal from "../../Components/EditIlmModal/EditIlmModal";
 
-const ViewIlm = () => {
+const ViewIlm = ({ records }) => {
   const { id } = useParams();
-  const record = data.find((d) => d.id === Number(id));
+
+  const record = records.find((d) => d._id === id);
+
+  console.log(record);
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -39,10 +41,16 @@ const ViewIlm = () => {
         <p className={styles.bangla}>{record.bangla}</p>
       </div>
 
-      <div className={styles.ref}>
-        {record.type === "quran"
-          ? `Surah ${record.surah} • Ayah ${record.verse}`
-          : `${record.book} • Hadith ${record.hadithNo}`}
+      <div className={styles.refRow}>
+        <span className={styles.ref}>
+          {record.type === "quran"
+            ? `Surah ${record.surah} • Ayah ${record.verse}`
+            : `${record.book} • Hadith ${record.hadithNo}`}
+        </span>
+
+        <span className={styles.ref}>
+          {new Date(record.createdAt).toLocaleDateString("bn-BD")}
+        </span>
       </div>
 
       {showEdit && (

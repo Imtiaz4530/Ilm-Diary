@@ -61,6 +61,11 @@
 
 .ref {
   font-size: 15px;
-  margin-top: 10px;
   color: #888;
+}
+
+.refRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

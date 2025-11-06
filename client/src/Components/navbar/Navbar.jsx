@@ -6,11 +6,6 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const handleAddIlm = (data) => {
-    console.log("Saved Ilm:", data);
-    // TODO: send to backend later
-  };
-
   return (
     <>
       <nav className={styles.navbar}>
@@ -22,12 +17,7 @@ const Navbar = () => {
           + Record Ilm
         </button>
       </nav>
-      {showModal && (
-        <AddIlmModal
-          onClose={() => setShowModal(false)}
-          onSubmit={handleAddIlm}
-        />
-      )}
+      {showModal && <AddIlmModal onClose={() => setShowModal(false)} />}
     </>
   );
 };
