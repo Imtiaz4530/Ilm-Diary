@@ -42,7 +42,48 @@ const createIlmRecord = async (req, res) => {
   }
 };
 
-const editIlmRecord = async (req, res) => {};
+const editIlmRecord = async (req, res) => {
+  const { title, type, bangla, arabic, surah, verse, book, hadithNo } =
+    req.body;
+
+  try {
+    if ((!title, !type, !bangla, !arabic)) {
+      return res.status(400).json({ message: "Required fields are missing" });
+    }
+
+    if (type === "quran" && (!surah || !verse)) {
+      return res
+        .status(400)
+        .json({ message: "Surah and Verse are required for Quran type" });
+    }
+
+    if (type === "hadith" && (!book || !hadithNo)) {
+      return res
+        .status(400)
+        .json({ message: "Book and Hadith No are required for Hadith type" });
+    }
+
+    const ilmId = req.params.id;
+
+    const findIlmRecord = await Ilm.findById(ilmId);
+    if (!findIlmRecord) {
+      return res.status(404).json({ message: "ILM record not found" });
+    }
+
+    const updatedIlmRecord = await Ilm.findByIdAndUpdate(
+      ilmId,
+      { title, bangla, arabic, surah, verse, book, hadithNo },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ updatedIlmRecord, message: "ILM record updated successfully" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Server Error from editIlmRecord" });
+  }
+};
 
 const getAllIlmRecord = async (req, res) => {
   try {

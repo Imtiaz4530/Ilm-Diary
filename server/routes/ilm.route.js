@@ -8,6 +8,6 @@ const {
 
 route.get("/", getAllIlmRecord);
 route.post("/create", createIlmRecord);
-route.post("/edit", editIlmRecord);
+route.post("/edit/:id", editIlmRecord);
 
 module.exports = route;
