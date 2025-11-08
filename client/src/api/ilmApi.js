@@ -19,7 +19,13 @@ export const createIlmRecord = async (storyData) => {
 };
 
 // 🟢 Edit ilm records
-// export const addStoryPart = async (storyData) => {
-//   const res = await API.post("/story/add", storyData);
-//   return res.data;
-// };
+export const updateIlmRecord = async ({ id, updatedData }) => {
+  const res = await API.post(`/ilm/edit/${id}`, updatedData);
+  return res.data;
+};
+
+// 🟢 Delete ilm records
+export const deleteIlmRecord = async (id) => {
+  const res = await API.delete(`/ilm/delete/${id}`);
+  return res.data;
+};

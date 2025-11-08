@@ -1,0 +1,44 @@
+.wrapper {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  background: #111;
+  border: 1px solid #1f1f1f;
+  padding: 35px 25px;
+  text-align: center;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+}
+
+.icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4ea685;
+  margin-bottom: 8px;
+}
+
+.text {
+  font-size: 15px;
+  color: #bbb;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.homeBtn {
+  display: inline-block;
+  background: #4ea685;
+  padding: 10px 18px;
+  border-radius: 6px;
+  color: #0a0a0a;
+  font-weight: 600;
+}

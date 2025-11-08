@@ -1,7 +1,9 @@
 import { useState } from "react";
-import styles from "./AddIlmModal.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import styles from "./AddIlmModal.module.css";
 import { createIlmRecord } from "../../api/ilmApi";
 
 const AddIlmModal = ({ onClose }) => {
@@ -28,7 +30,7 @@ const AddIlmModal = ({ onClose }) => {
       navigate("/");
     },
     onError: () => {
-      alert("❌ Failed to post story. Please try again.");
+      toast.error("❌ রেকর্ড সংরক্ষণ ব্যর্থ হয়েছে!");
     },
   });
 
@@ -38,12 +40,6 @@ const AddIlmModal = ({ onClose }) => {
       [e.target.name]: e.target.value,
     });
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   onSubmit(formData);
-  //   onClose();
-  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();

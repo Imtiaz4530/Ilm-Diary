@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import styles from "./EditIlmModal.module.css";
+import { updateIlmRecord } from "../../api/ilmApi";
+import { toast } from "react-toastify";
 
-const EditIlmModal = ({ onClose, onSubmit, data }) => {
+const EditIlmModal = ({ onClose, data }) => {
   const [formData, setFormData] = useState({
     title: data.title,
     arabic: data.arabic,
@@ -11,6 +14,19 @@ const EditIlmModal = ({ onClose, onSubmit, data }) => {
     verse: data.verse || "",
     book: data.book || "",
     hadithNo: data.hadithNo || "",
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({ id, data }) => updateIlmRecord({ id, updatedData: data }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["ilm"]);
+      onClose();
+    },
+    onError: () => {
+      toast.error("❌ রেকর্ড আপডেট ব্যর্থ হয়েছে!");
+    },
   });
 
   const handleChange = (e) => {
@@ -22,8 +38,19 @@ const EditIlmModal = ({ onClose, onSubmit, data }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ ...formData });
-    onClose();
+
+    mutate({
+      id: data._id,
+      data: {
+        title: formData.title,
+        arabic: formData.arabic,
+        bangla: formData.bangla,
+        surah: data.type === "quran" ? formData.surah : null,
+        verse: data.type === "quran" ? formData.verse : null,
+        book: data.type === "hadith" ? formData.book : null,
+        hadithNo: data.type === "hadith" ? formData.hadithNo : null,
+      },
+    });
   };
 
   return (
