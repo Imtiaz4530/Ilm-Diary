@@ -66,7 +66,7 @@ const loginController = async (req, res) => {
 
       res.json({ token, user, message: "Login successful" });
     } else {
-      return res.json({ message: "Incorrect password." });
+      return res.status(401).json({ message: "Incorrect password." });
     }
   } catch (e) {
     console.log(e);

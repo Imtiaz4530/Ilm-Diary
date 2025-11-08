@@ -5,7 +5,10 @@ import Home from "./Pages/home/Home";
 import Navbar from "./Components/navbar/Navbar";
 import ViewIlm from "./Pages/viewIlm/ViewIlm";
 import { fetchIlmRecords } from "./api/ilmApi";
-import Loading from "./Components/loading/Loading";
+import Signup from "./Pages/Signup/Signup";
+import Login from "./Pages/Login/Login";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 const App = () => {
   const { data, isLoading } = useQuery({
@@ -14,16 +17,21 @@ const App = () => {
     staleTime: 1000 * 60,
   });
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  const { user } = useContext(AuthContext);
+  console.log(user);
 
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home records={data} />} />
-        <Route path="/view/:id" element={<ViewIlm records={data} />} />
+        <Route path="/" element={<Home records={data} loading={isLoading} />} />
+        <Route
+          path="/view/:id"
+          element={<ViewIlm records={data} loading={isLoading} />}
+        />
+
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </>
   );

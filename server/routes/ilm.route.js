@@ -9,7 +9,7 @@ const {
   deleteIlmRecord,
 } = require("../controllers/ilm.controller");
 
-route.get("/", userAuth, getAllIlmRecord);
+route.get("/", getAllIlmRecord);
 route.post("/create", userAuth, createIlmRecord);
 route.post("/edit/:id", userAuth, editIlmRecord);
 route.delete("/delete/:id", userAuth, deleteIlmRecord);

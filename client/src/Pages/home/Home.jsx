@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Home.module.css";
+import Loading from "../../Components/loading/Loading";
 
-const Home = ({ records }) => {
+const Home = ({ records, loading }) => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,23 +17,23 @@ const Home = ({ records }) => {
     setCurrentPage(1);
   }, [search, filter]);
 
-  const filteredRecords = records.filter((item) => {
-    const matchesSearch = item.title
+  const filteredRecords = records?.filter((item) => {
+    const matchesSearch = item?.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesFilter = filter ? item.type === filter : true;
+    const matchesFilter = filter ? item?.type === filter : true;
     return matchesSearch && matchesFilter;
   });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentRecords = filteredRecords.slice(
+  const currentRecords = filteredRecords?.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
 
-  const totalPages = Math.ceil(filteredRecords.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredRecords?.length / itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -43,6 +44,8 @@ const Home = ({ records }) => {
     if (text.length <= limit) return text;
     return text.slice(0, limit) + " ...";
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className={styles.container}>
@@ -100,7 +103,7 @@ const Home = ({ records }) => {
             <p className={styles.noSub}>নতুন একটি রেকর্ড যোগ করুন...</p>
           </div>
         ) : (
-          currentRecords.map((item) => (
+          currentRecords?.map((item) => (
             <div
               className={styles.card}
               key={item._id}

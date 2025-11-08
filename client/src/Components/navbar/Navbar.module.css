@@ -1,6 +1,6 @@
 .navbar {
   width: 100%;
-  padding: 18px 100px; 
+  padding: 18px 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,7 +19,6 @@
   white-space: nowrap;
 }
 
-
 .addBtn {
   background: #4ea685;
   padding: 10px 22px;
@@ -35,6 +34,42 @@
 .addBtn:hover {
   opacity: 0.85;
   transform: translateY(-1px);
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Login Button */
+.loginBtn {
+  background: #4ea685;
+  padding: 10px 22px;
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  background: #a83a3a;
+  padding: 9px 20px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.logoutBtn:hover,
+.loginBtn:hover {
+  opacity: 0.85;
 }
 
 /* ✅ Responsive breakpoints */
