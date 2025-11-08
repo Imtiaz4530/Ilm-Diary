@@ -1,5 +1,7 @@
 const route = require("express").Router();
 
+const userAuth = require("../middleware/auth.middleware");
+
 const {
   createIlmRecord,
   editIlmRecord,
@@ -7,9 +9,9 @@ const {
   deleteIlmRecord,
 } = require("../controllers/ilm.controller");
 
-route.get("/", getAllIlmRecord);
-route.post("/create", createIlmRecord);
-route.post("/edit/:id", editIlmRecord);
-route.delete("/delete/:id", deleteIlmRecord);
+route.get("/", userAuth, getAllIlmRecord);
+route.post("/create", userAuth, createIlmRecord);
+route.post("/edit/:id", userAuth, editIlmRecord);
+route.delete("/delete/:id", userAuth, deleteIlmRecord);
 
 module.exports = route;

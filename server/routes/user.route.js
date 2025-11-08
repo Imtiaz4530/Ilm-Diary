@@ -8,4 +8,4 @@ const {
 router.post("/signup", signUpController);
 router.post("/login", loginController);
 
-export default router;
+module.exports = router;

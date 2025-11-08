@@ -1,8 +1,11 @@
 const Ilm = require("../models/ilm.model");
+const User = require("../models/user.model");
 
 const createIlmRecord = async (req, res) => {
   const { title, type, bangla, arabic, surah, verse, book, hadithNo } =
     req.body;
+
+  const { id } = req.user;
 
   try {
     if ((!title, !type, !bangla, !arabic)) {
@@ -21,7 +24,10 @@ const createIlmRecord = async (req, res) => {
         .json({ message: "Book and Hadith No are required for Hadith type" });
     }
 
+    const creator = await User.findById(id).then((user) => user.username);
+
     const newIlmRecord = new Ilm({
+      creator,
       title,
       type,
       bangla,
