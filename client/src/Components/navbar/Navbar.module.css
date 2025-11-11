@@ -154,4 +154,8 @@
   .logoutIconBtn svg {
     color: #0a0a0a;
   }
+
+  .brand {
+    font-size: 22px;
+  }
 }

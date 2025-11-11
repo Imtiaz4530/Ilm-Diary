@@ -29,15 +29,11 @@ const ViewIlm = ({ records, loading }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  // const record = records?.find((d) => d._id === id);
-  // ✅ Fetch single record if not found in global query
   const { data: singleRecord, isLoading: singleLoading } = useQuery({
     queryKey: ["single-ilm", id],
     queryFn: () => fetchSingleIlmRecords(id),
-    enabled: !records, // will activate on reload
+    enabled: !records,
   });
-
-  // ✅ Now use both sources
   const record = records?.find((d) => d._id === id) || singleRecord;
 
   useEffect(() => {
@@ -108,21 +104,23 @@ const ViewIlm = ({ records, loading }) => {
             </button>
 
             {/* Icon Buttons (Mobile Only) */}
-            <button
-              className={styles.editIconBtn}
-              disabled={disabledButton}
-              onClick={() => setShowEdit(true)}
-            >
-              ✏️
-            </button>
+            <div className={styles.iconBtnGroup}>
+              <button
+                className={styles.editIconBtn}
+                disabled={disabledButton}
+                onClick={() => setShowEdit(true)}
+              >
+                ✏️
+              </button>
 
-            <button
-              className={styles.deleteIconBtn}
-              disabled={disabledButton}
-              onClick={() => setShowDeleteModal(true)}
-            >
-              🗑️
-            </button>
+              <button
+                className={styles.deleteIconBtn}
+                disabled={disabledButton}
+                onClick={() => setShowDeleteModal(true)}
+              >
+                🗑️
+              </button>
+            </div>
           </>
         </div>
       </div>

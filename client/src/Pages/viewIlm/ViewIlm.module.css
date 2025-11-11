@@ -128,9 +128,15 @@
 }
 
 @media screen and (max-width: 400px) {
+  .iconBtnGroup {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
+
   .editBtn,
   .deleteBtn {
-    display: none; /* hide full text buttons */
+    display: none;
   }
 
   .editIconBtn,
@@ -167,6 +173,7 @@
 
   .title {
     font-size: 15px;
+    margin-right: 10px;
   }
 
   .heading {
