@@ -21,7 +21,7 @@ const AddIlmModal = ({ onClose }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: createIlmRecord,
     onSuccess: () => {
       queryClient.invalidateQueries(["stories"]);

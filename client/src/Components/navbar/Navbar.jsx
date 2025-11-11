@@ -1,4 +1,6 @@
 import { useContext, useState } from "react";
+import { MdLogout } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
 
 import styles from "./Navbar.module.css";
 import AddIlmModal from "../addIlmModal/AddIlmModal";
@@ -35,16 +37,29 @@ const Navbar = () => {
               </Link>
 
               {role === "admin" && (
-                <button
-                  className={styles.addBtn}
-                  onClick={() => setShowModal(true)}
-                >
-                  + Record Ilm
-                </button>
+                <>
+                  <button
+                    className={styles.addBtn}
+                    onClick={() => setShowModal(true)}
+                  >
+                    + Record Ilm
+                  </button>
+
+                  <button
+                    className={styles.addIconBtn}
+                    onClick={() => setShowModal(true)}
+                  >
+                    <IoMdAdd size={22} />
+                  </button>
+                </>
               )}
 
               <button className={styles.logoutBtn} onClick={logout}>
                 Logout
+              </button>
+
+              <button className={styles.logoutIconBtn} onClick={logout}>
+                <MdLogout size={22} />
               </button>
             </>
           )}

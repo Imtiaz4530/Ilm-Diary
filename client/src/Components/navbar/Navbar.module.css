@@ -88,6 +88,11 @@
   opacity: 0.85;
 }
 
+.addIconBtn,
+.logoutIconBtn {
+  display: none;
+}
+
 /* ✅ Responsive breakpoints */
 @media (max-width: 1024px) {
   .navbar {
@@ -122,5 +127,31 @@
   .addBtn {
     padding: 7px 14px;
     font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .addBtn,
+  .logoutBtn {
+    display: none;
+  }
+
+  .addIconBtn,
+  .logoutIconBtn {
+    display: inline-flex;
+    background: #4ea685;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .logoutIconBtn {
+    background: #b33a3a;
+  }
+
+  .addIconBtn svg,
+  .logoutIconBtn svg {
+    color: #0a0a0a;
   }
 }

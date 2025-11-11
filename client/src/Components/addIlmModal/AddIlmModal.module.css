@@ -16,6 +16,8 @@
   border-radius: 10px;
   border: 1px solid #1f1f1f;
   animation: fadeIn 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .heading {

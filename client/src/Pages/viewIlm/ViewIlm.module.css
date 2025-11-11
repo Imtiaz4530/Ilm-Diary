@@ -121,3 +121,67 @@
   font-size: 16px;
   color: #cfcfcf;
 }
+
+.editIconBtn,
+.deleteIconBtn {
+  display: none;
+}
+
+@media screen and (max-width: 400px) {
+  .editBtn,
+  .deleteBtn {
+    display: none; /* hide full text buttons */
+  }
+
+  .editIconBtn,
+  .deleteIconBtn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .editIconBtn {
+    background: #4ea685;
+    color: #0a0a0a;
+  }
+
+  .deleteIconBtn {
+    background: #b33a3a;
+    color: #fff;
+  }
+
+  .editIconBtn[disabled],
+  .deleteIconBtn[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .bookmarkBtn {
+    font-size: 28px;
+    margin-right: 0;
+  }
+
+  .title {
+    font-size: 15px;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+
+  .refRow {
+    margin-top: 5px;
+  }
+
+  .ref {
+    font-size: 11px;
+  }
+
+  .creator {
+    font-size: 13px;
+  }
+}

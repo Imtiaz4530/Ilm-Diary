@@ -78,21 +78,40 @@ const ViewIlm = ({ records, loading }) => {
             </button>
           )}
 
-          <button
-            className={styles.editBtn}
-            disabled={disabledButton}
-            onClick={() => setShowEdit(true)}
-          >
-            ✏️ Edit
-          </button>
+          <>
+            <button
+              className={styles.editBtn}
+              disabled={disabledButton}
+              onClick={() => setShowEdit(true)}
+            >
+              ✏️ Edit
+            </button>
 
-          <button
-            className={styles.deleteBtn}
-            disabled={disabledButton}
-            onClick={() => setShowDeleteModal(true)}
-          >
-            🗑️ Delete
-          </button>
+            <button
+              className={styles.deleteBtn}
+              disabled={disabledButton}
+              onClick={() => setShowDeleteModal(true)}
+            >
+              🗑️ Delete
+            </button>
+
+            {/* Icon Buttons (Mobile Only) */}
+            <button
+              className={styles.editIconBtn}
+              disabled={disabledButton}
+              onClick={() => setShowEdit(true)}
+            >
+              ✏️
+            </button>
+
+            <button
+              className={styles.deleteIconBtn}
+              disabled={disabledButton}
+              onClick={() => setShowDeleteModal(true)}
+            >
+              🗑️
+            </button>
+          </>
         </div>
       </div>
 
