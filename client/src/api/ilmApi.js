@@ -6,6 +6,12 @@ export const fetchIlmRecords = async () => {
   return res.data;
 };
 
+// 🟢 Fetch Single ilm records
+export const fetchSingleIlmRecords = async (id) => {
+  const res = await API.get(`/ilm/${id}`);
+  return res.data;
+};
+
 // 🟢 Fetch all ilm records
 export const bookmarkIlmRecords = async (id) => {
   const res = await API.get(`/ilm/bookmark/${id}`);

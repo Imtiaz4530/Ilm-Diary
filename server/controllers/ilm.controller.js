@@ -102,6 +102,22 @@ const getAllIlmRecord = async (req, res) => {
   }
 };
 
+const getSingleIlmRecord = async (req, res) => {
+  const ilmId = req.params.id;
+
+  try {
+    const findIlmRecord = await Ilm.findById(ilmId);
+    if (!findIlmRecord) {
+      return res.status(404).json({ message: "ILM record not found" });
+    }
+
+    res.status(200).json(findIlmRecord);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Server Error from getSingleIlmRecord" });
+  }
+};
+
 const deleteIlmRecord = async (req, res) => {
   const ilmId = req.params.id;
 
@@ -163,4 +179,5 @@ module.exports = {
   getAllIlmRecord,
   deleteIlmRecord,
   addBookmarkIlmRecord,
+  getSingleIlmRecord,
 };

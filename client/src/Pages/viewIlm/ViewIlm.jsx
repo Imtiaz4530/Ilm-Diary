@@ -1,12 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 import styles from "./ViewIlm.module.css";
 import EditIlmModal from "../../Components/EditIlmModal/EditIlmModal";
-import { bookmarkIlmRecords, deleteIlmRecord } from "../../api/ilmApi";
+import {
+  bookmarkIlmRecords,
+  deleteIlmRecord,
+  fetchSingleIlmRecords,
+} from "../../api/ilmApi";
 import DeleteConfirmModal from "../../Components/DeleteConfirmModal/DeleteConfirmModal";
 import NotFound from "../../Components/NotFound/NotFound";
 import Loading from "../../Components/loading/Loading";
@@ -22,11 +26,19 @@ const ViewIlm = ({ records, loading }) => {
   const disabledButton = !user || user?.role === "user";
 
   const { id } = useParams();
-
-  const record = records?.find((d) => d._id === id);
-
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // const record = records?.find((d) => d._id === id);
+  // ✅ Fetch single record if not found in global query
+  const { data: singleRecord, isLoading: singleLoading } = useQuery({
+    queryKey: ["single-ilm", id],
+    queryFn: () => fetchSingleIlmRecords(id),
+    enabled: !records, // will activate on reload
+  });
+
+  // ✅ Now use both sources
+  const record = records?.find((d) => d._id === id) || singleRecord;
 
   useEffect(() => {
     if (user?.bookmarks?.includes(record?._id)) {
@@ -59,7 +71,7 @@ const ViewIlm = ({ records, loading }) => {
     },
   });
 
-  if (loading) return <Loading />;
+  if (loading || singleLoading) return <Loading />;
 
   if (!record) return <NotFound />;
 
