@@ -39,7 +39,23 @@
 .rightSide {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+}
+
+/* Avatar */
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #4ea685;
+  color: #0a0a0a;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  user-select: none;
+  cursor: pointer;
 }
 
 /* Login Button */

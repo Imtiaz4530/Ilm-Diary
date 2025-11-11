@@ -33,11 +33,15 @@ const signUpController = async (req, res) => {
     });
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      { id: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "3d" }
+    );
 
     res
       .status(201)
-      .json({ newUser, token, message: "User registered successfully" });
+      .json({ user: newUser, token, message: "User registered successfully" });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Server Error from signUpController" });
@@ -62,7 +66,11 @@ const loginController = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign(
+        { id: user._id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "3d" }
+      );
 
       res.json({ token, user, message: "Login successful" });
     } else {

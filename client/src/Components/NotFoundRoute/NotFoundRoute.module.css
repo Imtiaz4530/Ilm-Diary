@@ -1,0 +1,31 @@
+.wrapper {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 60px;
+  margin-top: 50px;
+}
+
+.code {
+  font-size: 70px;
+  font-weight: 700;
+  color: #4ea685;
+  margin-bottom: 10px;
+}
+
+.msg {
+  font-size: 18px;
+  color: #ccc;
+  margin-bottom: 25px;
+}
+
+.homeBtn {
+  background: #4ea685;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: #0a0a0a;
+  font-weight: 600;
+  text-decoration: none;
+}

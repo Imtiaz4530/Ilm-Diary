@@ -35,6 +35,26 @@
   color: #4ea685;
 }
 
+.bookmarkBtn {
+  background: none;
+  border: none;
+  color: #a83a3a;
+  font-size: 32px;
+  cursor: pointer;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.bookmarkBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.bookmarkBtn:hover {
+  opacity: 0.8;
+}
+
 .editBtn {
   background: #4ea685;
   padding: 8px 16px;
@@ -47,6 +67,14 @@
 
 .editBtn:hover {
   opacity: 0.9;
+}
+
+.editBtn:disabled,
+.deleteBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(100%);
 }
 
 .type {
@@ -87,4 +115,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.creator {
+  font-size: 16px;
+  color: #cfcfcf;
 }

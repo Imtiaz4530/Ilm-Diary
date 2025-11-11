@@ -21,9 +21,10 @@ const Login = () => {
     mutationFn: login,
     onSuccess: (data) => {
       toast.success("✅ Login successful!");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setToken(data.token);
       setUser(data.user);
-      localStorage.setItem("token", data.token);
       navigate("/");
     },
     onError: (e) => {

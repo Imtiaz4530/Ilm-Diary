@@ -1,18 +1,25 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 import styles from "./ViewIlm.module.css";
 import EditIlmModal from "../../Components/EditIlmModal/EditIlmModal";
-import { deleteIlmRecord } from "../../api/ilmApi";
+import { bookmarkIlmRecords, deleteIlmRecord } from "../../api/ilmApi";
 import DeleteConfirmModal from "../../Components/DeleteConfirmModal/DeleteConfirmModal";
 import NotFound from "../../Components/NotFound/NotFound";
 import Loading from "../../Components/loading/Loading";
+import { AuthContext } from "../../context/AuthContext";
 
 const ViewIlm = ({ records, loading }) => {
+  const [saved, setSaved] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const { user, updateUser } = useContext(AuthContext);
+
+  const disabledButton = !user || user?.role === "user";
 
   const { id } = useParams();
 
@@ -20,6 +27,12 @@ const ViewIlm = ({ records, loading }) => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (user?.bookmarks?.includes(record?._id)) {
+      setSaved(true);
+    }
+  }, [user, record]);
 
   const { mutate: deleteRecord } = useMutation({
     mutationFn: (id) => deleteIlmRecord(id),
@@ -29,6 +42,20 @@ const ViewIlm = ({ records, loading }) => {
     },
     onError: () => {
       toast.error("❌ ডিলিট ব্যর্থ হয়েছে!");
+    },
+  });
+
+  const { mutate: toggleBookmark } = useMutation({
+    mutationFn: bookmarkIlmRecords,
+
+    onSuccess: (data) => {
+      setSaved(data.bookmarked);
+
+      if (data.user) {
+        updateUser(data.user);
+      }
+      queryClient.invalidateQueries(["ilm-records"]);
+      queryClient.invalidateQueries(["single-ilm"]);
     },
   });
 
@@ -42,12 +69,26 @@ const ViewIlm = ({ records, loading }) => {
         <h2 className={styles.title}>{record?.title}</h2>
 
         <div className={styles.btnGroup}>
-          <button className={styles.editBtn} onClick={() => setShowEdit(true)}>
+          {user && (
+            <button
+              className={styles.bookmarkBtn}
+              onClick={() => toggleBookmark(record._id)}
+            >
+              {saved ? <FaHeart /> : <FaRegHeart />}
+            </button>
+          )}
+
+          <button
+            className={styles.editBtn}
+            disabled={disabledButton}
+            onClick={() => setShowEdit(true)}
+          >
             ✏️ Edit
           </button>
 
           <button
             className={styles.deleteBtn}
+            disabled={disabledButton}
             onClick={() => setShowDeleteModal(true)}
           >
             🗑️ Delete
@@ -75,6 +116,7 @@ const ViewIlm = ({ records, loading }) => {
         </span>
 
         <span className={styles.ref}>
+          Created By <span className={styles.creator}>{record.creator}</span> •{" "}
           {new Date(record?.createdAt).toLocaleDateString("bn-BD")}
         </span>
       </div>

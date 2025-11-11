@@ -6,6 +6,12 @@ export const fetchIlmRecords = async () => {
   return res.data;
 };
 
+// 🟢 Fetch all ilm records
+export const bookmarkIlmRecords = async (id) => {
+  const res = await API.get(`/ilm/bookmark/${id}`);
+  return res.data;
+};
+
 // 🟢 Create new ilm records
 export const createIlmRecord = async (storyData) => {
   const res = await API.post("/ilm/create", storyData);

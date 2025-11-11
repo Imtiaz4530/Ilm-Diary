@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Home.module.css";
 import Loading from "../../Components/loading/Loading";
+import { AuthContext } from "../../context/AuthContext";
 
 const Home = ({ records, loading }) => {
   const [search, setSearch] = useState("");
@@ -11,17 +12,25 @@ const Home = ({ records, loading }) => {
 
   const navigate = useNavigate();
 
+  const { user } = useContext(AuthContext);
+
   const itemsPerPage = 12;
 
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
-
   const filteredRecords = records?.filter((item) => {
     const matchesSearch = item?.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesFilter = filter ? item?.type === filter : true;
+
+    const matchesFilter =
+      filter === "bookmark"
+        ? user?.bookmarks?.includes(item?._id)
+        : filter
+        ? item?.type === filter
+        : true;
+
     return matchesSearch && matchesFilter;
   });
 
@@ -93,6 +102,19 @@ const Home = ({ records, loading }) => {
           />
           <span></span> হাদিস
         </label>
+
+        {user && (
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="filter"
+              value="bookmark"
+              checked={filter === "bookmark"}
+              onChange={() => setFilter("bookmark")}
+            />
+            <span></span> ফেভারিট
+          </label>
+        )}
       </div>
 
       <div className={styles.list}>
@@ -126,6 +148,8 @@ const Home = ({ records, loading }) => {
                 </span>
 
                 <span className={styles.ref}>
+                  Created By{" "}
+                  <span className={styles.creator}>{item.creator}</span> •{" "}
                   {new Date(item.createdAt).toLocaleDateString("bn-BD")}
                 </span>
               </div>

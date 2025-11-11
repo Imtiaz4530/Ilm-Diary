@@ -16,7 +16,7 @@ const userAuth = (req, res, next) => {
       return res.status(401).json({ message: "Not Authorized! Invalid Token" });
     }
 
-    req.user = { id: decoded.id };
+    req.user = { id: decoded.id, role: decoded.role };
 
     next();
   } catch (error) {

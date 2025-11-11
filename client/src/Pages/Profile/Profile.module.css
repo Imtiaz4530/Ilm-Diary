@@ -1,0 +1,94 @@
+.wrapper {
+  background: #0a0a0a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  margin-top: 50px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: #111;
+  border: 1px solid #1f1f1f;
+  padding: 35px 25px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #4ea685;
+  color: #0a0a0a;
+  font-size: 38px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px auto;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #eaeaea;
+  margin-bottom: 5px;
+}
+
+.username {
+  font-size: 14px;
+  color: #6f6f6f;
+  margin-bottom: 25px;
+}
+
+.infoBox {
+  background: #0d0d0d;
+  border: 1px solid #1d1d1d;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.infoRow span {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.infoRow p {
+  color: #e1e1e1;
+  font-size: 14px;
+}
+
+/* Edit button */
+.editBtn {
+  background: #4ea685;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #0a0a0a;
+  cursor: pointer;
+}
+
+.editBtn:hover {
+  opacity: 0.85;
+}
+
+/* Not logged */
+.notLogged {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ddd;
+  font-size: 18px;
+}

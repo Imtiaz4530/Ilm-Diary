@@ -7,8 +7,10 @@ import ViewIlm from "./Pages/viewIlm/ViewIlm";
 import { fetchIlmRecords } from "./api/ilmApi";
 import Signup from "./Pages/Signup/Signup";
 import Login from "./Pages/Login/Login";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+import Profile from "./Pages/Profile/Profile";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import GuestRoute from "./Components/GuestRoute/GuestRoute";
+import NotFoundRoute from "./Components/NotFoundRoute/NotFoundRoute";
 
 const App = () => {
   const { data, isLoading } = useQuery({
@@ -16,9 +18,6 @@ const App = () => {
     queryFn: fetchIlmRecords,
     staleTime: 1000 * 60,
   });
-
-  const { user } = useContext(AuthContext);
-  console.log(user);
 
   return (
     <>
@@ -30,8 +29,34 @@ const App = () => {
           element={<ViewIlm records={data} loading={isLoading} />}
         />
 
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/signup"
+          element={
+            <GuestRoute>
+              <Signup />
+            </GuestRoute>
+          }
+        />
+
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </>
   );

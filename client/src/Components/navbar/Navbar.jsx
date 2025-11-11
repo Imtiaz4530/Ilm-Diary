@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+
 import styles from "./Navbar.module.css";
 import AddIlmModal from "../addIlmModal/AddIlmModal";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,8 +8,10 @@ import { AuthContext } from "../../context/AuthContext";
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
 
-  const { token, logout } = useContext(AuthContext);
+  const { token, logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const role = user?.role;
 
   return (
     <>
@@ -27,12 +30,18 @@ const Navbar = () => {
             </button>
           ) : (
             <>
-              <button
-                className={styles.addBtn}
-                onClick={() => setShowModal(true)}
-              >
-                + Record Ilm
-              </button>
+              <Link to="/profile" className={styles.avatar}>
+                {user?.name?.charAt(0).toUpperCase()}
+              </Link>
+
+              {role === "admin" && (
+                <button
+                  className={styles.addBtn}
+                  onClick={() => setShowModal(true)}
+                >
+                  + Record Ilm
+                </button>
+              )}
 
               <button className={styles.logoutBtn} onClick={logout}>
                 Logout

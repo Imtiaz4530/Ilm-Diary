@@ -119,9 +119,48 @@ const deleteIlmRecord = async (req, res) => {
   }
 };
 
+const addBookmarkIlmRecord = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const ilmRecord = await Ilm.findById(id);
+    if (!ilmRecord) {
+      return res.status(404).json({ message: "ILM record not found" });
+    }
+
+    if (user.bookmarks.includes(id)) {
+      user.bookmarks = user.bookmarks.filter(
+        (bookmarkId) => bookmarkId.toString() !== id
+      );
+      await user.save();
+      return res.status(200).json({
+        bookmarked: false,
+        user,
+        message: "Bookmark removed successfully",
+      });
+    }
+
+    user.bookmarks.push(id);
+    await user.save();
+    res
+      .status(200)
+      .json({ bookmarked: true, user, message: "Bookmark added successfully" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "Server Error from addBookmarkIlmRecord" });
+  }
+};
+
 module.exports = {
   createIlmRecord,
   editIlmRecord,
   getAllIlmRecord,
   deleteIlmRecord,
+  addBookmarkIlmRecord,
 };
