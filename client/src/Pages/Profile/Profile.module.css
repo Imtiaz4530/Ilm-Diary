@@ -202,3 +202,10 @@
   font-weight: 600;
   margin-bottom: 5px;
 }
+
+@media screen and (max-width: 520px) {
+  .radioGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}

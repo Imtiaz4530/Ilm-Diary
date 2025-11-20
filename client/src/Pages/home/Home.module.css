@@ -192,6 +192,13 @@
   color: #cfcfcf;
 }
 
+@media screen and (max-width: 520px) {
+  .radioGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
 @media screen and (max-width: 400px) {
   .title {
     font-size: 15px;
