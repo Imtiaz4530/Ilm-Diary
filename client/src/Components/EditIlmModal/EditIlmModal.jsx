@@ -14,11 +14,14 @@ const EditIlmModal = ({ onClose, data }) => {
     verse: data.verse || "",
     book: data.book || "",
     hadithNo: data.hadithNo || "",
+    answer: data.answer || "",
+    startingVerse: data.startingVerse || "",
+    endingVerse: data.endingVerse || "",
   });
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ id, data }) => updateIlmRecord({ id, updatedData: data }),
     onSuccess: () => {
       queryClient.invalidateQueries(["ilm"]);
@@ -42,13 +45,26 @@ const EditIlmModal = ({ onClose, data }) => {
     mutate({
       id: data._id,
       data: {
+        type: data.type,
         title: formData.title,
         arabic: formData.arabic,
         bangla: formData.bangla,
         surah: data.type === "quran" ? formData.surah : null,
-        verse: data.type === "quran" ? formData.verse : null,
+        verse:
+          data.type === "quran" && data.lineType === "one"
+            ? formData.verse
+            : null,
+        startingVerse:
+          data.type === "quran" && data.lineType === "multiple"
+            ? formData.startingVerse
+            : null,
+        endingVerse:
+          data.type === "quran" && data.lineType === "multiple"
+            ? formData.endingVerse
+            : null,
         book: data.type === "hadith" ? formData.book : null,
         hadithNo: data.type === "hadith" ? formData.hadithNo : null,
+        answer: data.type === "general" ? formData.answer : null,
       },
     });
   };
@@ -59,31 +75,64 @@ const EditIlmModal = ({ onClose, data }) => {
         <h2 className={styles.heading}>Edit Ilm</h2>
 
         {/* ✅ Quran Fields */}
-
         {data.type === "quran" && (
-          <div className={styles.rowFields}>
-            <div className={styles.formGroup}>
-              <label>Surah No</label>
-              <input
-                type="number"
-                name="surah"
-                value={formData.surah}
-                onChange={handleChange}
-                placeholder="Surah number"
-              />
+          <>
+            <div className={styles.rowFields}>
+              <div className={styles.formGroup}>
+                <label>Surah No</label>
+                <input
+                  type="number"
+                  name="surah"
+                  value={formData.surah}
+                  onChange={handleChange}
+                  placeholder="সুরাহ নাম্বার"
+                />
+              </div>
             </div>
 
-            <div className={styles.formGroup}>
-              <label>Ayah No</label>
-              <input
-                type="number"
-                name="verse"
-                value={formData.verse}
-                onChange={handleChange}
-                placeholder="Ayah number"
-              />
-            </div>
-          </div>
+            {/* 🔹 If lineType = one → Ayah field */}
+            {data.lineType === "one" && (
+              <div className={styles.rowFields}>
+                <div className={styles.formGroup}>
+                  <label>Ayah No</label>
+                  <input
+                    type="number"
+                    name="verse"
+                    value={formData.verse}
+                    onChange={handleChange}
+                    placeholder="আয়াত নাম্বার"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 🔹 If lineType = multiple → starting & ending verse fields */}
+            {data.lineType === "multiple" && (
+              <div className={styles.rowFields}>
+                <div className={styles.formGroup}>
+                  <label>Starting Verse</label>
+                  <input
+                    type="number"
+                    name="startingVerse"
+                    value={formData.startingVerse}
+                    onChange={handleChange}
+                    placeholder="শুরুর আয়াত"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Ending Verse</label>
+                  <input
+                    type="number"
+                    name="endingVerse"
+                    value={formData.endingVerse}
+                    onChange={handleChange}
+                    placeholder="Ending verse"
+                  />
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* ✅ Hadith Fields */}
@@ -96,7 +145,7 @@ const EditIlmModal = ({ onClose, data }) => {
                 name="book"
                 value={formData.book}
                 onChange={handleChange}
-                placeholder="Book name"
+                placeholder="হাদিসের বইয়ের নাম"
               />
             </div>
 
@@ -107,7 +156,7 @@ const EditIlmModal = ({ onClose, data }) => {
                 name="hadithNo"
                 value={formData.hadithNo}
                 onChange={handleChange}
-                placeholder="Hadith number"
+                placeholder="হাদিস নম্বর"
               />
             </div>
           </div>
@@ -121,32 +170,48 @@ const EditIlmModal = ({ onClose, data }) => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder="Title"
+            placeholder="হাদিস/কুরআনের/সাধারণ বিষয়"
           />
         </div>
 
-        {/* ✅ Arabic */}
-        <div className={styles.formGroup}>
-          <label>Arabic</label>
-          <textarea
-            name="arabic"
-            className={styles.arabic}
-            value={formData.arabic}
-            onChange={handleChange}
-            placeholder="Arabic text"
-          ></textarea>
-        </div>
+        {data.type !== "general" && (
+          <>
+            {/* ✅ Arabic */}
+            <div className={styles.formGroup}>
+              <label>Arabic</label>
+              <textarea
+                name="arabic"
+                className={styles.arabic}
+                value={formData.arabic}
+                onChange={handleChange}
+                placeholder="আরবীতে লিখুন..."
+              ></textarea>
+            </div>
 
-        {/* ✅ Bangla */}
-        <div className={styles.formGroup}>
-          <label>Bangla</label>
-          <textarea
-            name="bangla"
-            value={formData.bangla}
-            onChange={handleChange}
-            placeholder="Bangla meaning"
-          ></textarea>
-        </div>
+            {/* ✅ Bangla */}
+            <div className={styles.formGroup}>
+              <label>Bangla</label>
+              <textarea
+                name="bangla"
+                value={formData.bangla}
+                onChange={handleChange}
+                placeholder="বাংলা অর্থ লিখুন..."
+              ></textarea>
+            </div>
+          </>
+        )}
+
+        {data.type === "general" && (
+          <div className={styles.formGroup}>
+            <label>Answer</label>
+            <textarea
+              name="answer"
+              value={formData.answer}
+              onChange={handleChange}
+              placeholder="উত্তর লিখুন ..."
+            ></textarea>
+          </div>
+        )}
 
         {/* ✅ Buttons */}
         <div className={styles.actions}>

@@ -1,30 +1,68 @@
 const Ilm = require("../models/ilm.model");
 const User = require("../models/user.model");
+const { surahNames } = require("./surah");
 
 const createIlmRecord = async (req, res) => {
-  const { title, type, bangla, arabic, surah, verse, book, hadithNo } =
-    req.body;
+  const {
+    title,
+    type,
+    bangla,
+    arabic,
+    surah,
+    verse,
+    book,
+    hadithNo,
+    startingVerse,
+    endingVerse,
+    lineType,
+    answer,
+  } = req.body;
 
   const { id } = req.user;
 
   try {
-    if ((!title, !type, !bangla, !arabic)) {
+    if (!type || !title) {
       return res.status(400).json({ message: "Required fields are missing" });
     }
 
-    if (type === "quran" && (!surah || !verse)) {
-      return res
-        .status(400)
-        .json({ message: "Surah and Verse are required for Quran type" });
+    if (type === "quran") {
+      if (lineType === "one" && (!surah || !verse || !bangla || !arabic)) {
+        return res
+          .status(400)
+          .json({ message: "Surah and Verse are required for Quran verse." });
+      } else if (
+        lineType === "multiple" &&
+        (!surah || !startingVerse || !endingVerse || !bangla || !arabic)
+      ) {
+        return res.status(400).json({
+          message:
+            "Surah, Starting Verse and Ending Verse are required for Quran multiple verses.",
+        });
+      }
     }
 
-    if (type === "hadith" && (!book || !hadithNo)) {
+    if (lineType === "multiple") {
+      if (startingVerse >= endingVerse) {
+        res.status(400).json({
+          message: "Ending Verse must be greater than Starting Verse",
+        });
+      }
+    }
+
+    if (type === "hadith" && (!book || !hadithNo || !bangla || !arabic)) {
       return res
         .status(400)
         .json({ message: "Book and Hadith No are required for Hadith type" });
     }
 
+    if (type === "general" && !answer) {
+      return res
+        .status(400)
+        .json({ message: "Answer is required for General type" });
+    }
+
     const creator = await User.findById(id).then((user) => user.username);
+    const surahName = surahNames[Number(surah) - 1];
 
     const newIlmRecord = new Ilm({
       creator,
@@ -32,10 +70,14 @@ const createIlmRecord = async (req, res) => {
       type,
       bangla,
       arabic,
-      surah: type === "quran" ? surah : undefined,
+      surah: type === "quran" ? surahName : undefined,
       verse: type === "quran" ? verse : undefined,
       book: type === "hadith" ? book : undefined,
       hadithNo: type === "hadith" ? hadithNo : undefined,
+      startingVerse: type === "quran" ? startingVerse : undefined,
+      endingVerse: type === "quran" ? endingVerse : undefined,
+      lineType: type === "quran" ? lineType : undefined,
+      answer: type === "general" ? answer : undefined,
     });
 
     await newIlmRecord.save();
@@ -49,24 +91,62 @@ const createIlmRecord = async (req, res) => {
 };
 
 const editIlmRecord = async (req, res) => {
-  const { title, type, bangla, arabic, surah, verse, book, hadithNo } =
-    req.body;
+  const {
+    title,
+    type,
+    bangla,
+    arabic,
+    surah,
+    verse,
+    book,
+    hadithNo,
+    startingVerse,
+    endingVerse,
+    lineType,
+    answer,
+  } = req.body;
 
   try {
-    if ((!title, !type, !bangla, !arabic)) {
-      return res.status(400).json({ message: "Required fields are missing" });
-    }
-
-    if (type === "quran" && (!surah || !verse)) {
+    if (!title || !type) {
       return res
         .status(400)
-        .json({ message: "Surah and Verse are required for Quran type" });
+        .json({ message: "Title or Type fields are missing" });
     }
 
-    if (type === "hadith" && (!book || !hadithNo)) {
+    if (type === "quran") {
+      if (lineType === "one" && (!surah || !verse || !bangla || !arabic)) {
+        return res
+          .status(400)
+          .json({ message: "Surah and Verse are required for Quran verse." });
+      } else if (
+        lineType === "multiple" &&
+        (!surah || !startingVerse || !endingVerse || !bangla || !arabic)
+      ) {
+        return res.status(400).json({
+          message:
+            "Surah, Starting Verse and Ending Verse are required for Quran multiple verses.",
+        });
+      }
+    }
+
+    if (lineType === "multiple") {
+      if (startingVerse >= endingVerse) {
+        res.status(400).json({
+          message: "Ending Verse must be greater than Starting Verse",
+        });
+      }
+    }
+
+    if (type === "hadith" && (!book || !hadithNo || !bangla || !arabic)) {
       return res
         .status(400)
         .json({ message: "Book and Hadith No are required for Hadith type" });
+    }
+
+    if (type === "general" && !answer) {
+      return res
+        .status(400)
+        .json({ message: "Answer is required for General type" });
     }
 
     const ilmId = req.params.id;
@@ -78,7 +158,19 @@ const editIlmRecord = async (req, res) => {
 
     const updatedIlmRecord = await Ilm.findByIdAndUpdate(
       ilmId,
-      { title, bangla, arabic, surah, verse, book, hadithNo },
+      {
+        title,
+        bangla,
+        arabic,
+        surah,
+        verse,
+        book,
+        hadithNo,
+        startingVerse,
+        endingVerse,
+        lineType,
+        answer,
+      },
       { new: true }
     );
 

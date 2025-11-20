@@ -23,6 +23,8 @@
   border-radius: 6px;
   color: #0a0a0a;
   cursor: pointer;
+  width: 102px;
+  height: 36px;
 }
 
 .deleteBtn:hover {
@@ -63,6 +65,8 @@
   border-radius: 6px;
   color: #0a0a0a;
   cursor: pointer;
+  width: 86px;
+  height: 36px;
 }
 
 .editBtn:hover {
@@ -102,6 +106,12 @@
 
 .bangla {
   font-size: 20px;
+  line-height: 1.9;
+  color: #e0e0e0;
+}
+
+.answer {
+  font-size: 22px;
   line-height: 1.9;
   color: #e0e0e0;
 }
@@ -190,5 +200,9 @@
 
   .creator {
     font-size: 13px;
+  }
+
+  .hiddenTitle {
+    display: none;
   }
 }

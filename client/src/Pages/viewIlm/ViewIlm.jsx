@@ -77,7 +77,7 @@ const ViewIlm = ({ records, loading }) => {
         <h2 className={styles.title}>{record?.title}</h2>
 
         <div className={styles.btnGroup}>
-          {user && (
+          {user && record.type !== "general" && (
             <button
               className={styles.bookmarkBtn}
               onClick={() => toggleBookmark(record._id)}
@@ -126,24 +126,49 @@ const ViewIlm = ({ records, loading }) => {
       </div>
 
       <p className={styles.type}>
-        {record?.type === "quran" ? "📗 Quran" : "📘 Hadith"}
+        {record.type === "quran"
+          ? "📗 Quran"
+          : record.type === "hadith"
+          ? "📘 Hadith"
+          : "📝 General"}
       </p>
 
-      <div className={styles.box}>
-        <p className={styles.arabic}>{record?.arabic}</p>
-      </div>
+      {record.type !== "general" && (
+        <>
+          <div className={styles.box}>
+            <p className={styles.arabic}>{record?.arabic}</p>
+          </div>
 
-      <div className={styles.box}>
-        <p className={styles.bangla}>{record?.bangla}</p>
-      </div>
+          <div className={styles.box}>
+            <p className={styles.bangla}>{record?.bangla}</p>
+          </div>
+        </>
+      )}
+
+      {record.type === "general" && (
+        <div className={styles.box}>
+          <p className={styles.answer}>{record?.answer}</p>
+        </div>
+      )}
 
       <div className={styles.refRow}>
-        <span className={styles.ref}>
-          {record?.type === "quran"
-            ? `Surah ${record?.surah} • Ayah ${record?.verse}`
-            : `${record?.book} • Hadith ${record?.hadithNo}`}
-        </span>
-
+        {record.type !== "general" && (
+          <span className={styles.ref}>
+            {record.type === "quran" ? (
+              <>
+                <span className={styles.hiddenTitle}>সূরা</span> {record.surah}{" "}
+                • <span className={styles.hiddenTitle}>আয়াত</span>{" "}
+                {record.lineType === "multiple"
+                  ? `${record.startingVerse}-${record.endingVerse}`
+                  : record.verse}
+              </>
+            ) : (
+              <>
+                {record.book} • হাদিস {record.hadithNo}
+              </>
+            )}
+          </span>
+        )}
         <span className={styles.ref}>
           Created By <span className={styles.creator}>{record.creator}</span> •{" "}
           {new Date(record?.createdAt).toLocaleDateString("bn-BD")}

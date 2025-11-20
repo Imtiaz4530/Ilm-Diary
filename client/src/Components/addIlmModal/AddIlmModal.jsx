@@ -8,6 +8,7 @@ import { createIlmRecord } from "../../api/ilmApi";
 
 const AddIlmModal = ({ onClose }) => {
   const [type, setType] = useState("quran");
+  const [lineType, setLineType] = useState("one");
   const [formData, setFormData] = useState({
     title: "",
     arabic: "",
@@ -16,6 +17,9 @@ const AddIlmModal = ({ onClose }) => {
     verse: "",
     book: "",
     hadithNo: "",
+    startingVerse: "",
+    endingVerse: "",
+    answer: "",
   });
 
   const queryClient = useQueryClient();
@@ -53,6 +57,17 @@ const AddIlmModal = ({ onClose }) => {
       verse: type === "quran" ? formData.verse : null,
       book: type === "hadith" ? formData.book : null,
       hadithNo: type === "hadith" ? formData.hadithNo : null,
+      lineType: type === "quran" ? lineType : null,
+      startingVerse:
+        type === "quran" && lineType === "multiple"
+          ? formData.startingVerse
+          : null,
+      endingVerse:
+        type === "quran" && lineType === "multiple"
+          ? formData.endingVerse
+          : null,
+
+      answer: type === "general" ? formData.answer : null,
     };
 
     mutate(ilmRecordData);
@@ -89,6 +104,17 @@ const AddIlmModal = ({ onClose }) => {
                 />
                 <span></span> Hadith
               </label>
+
+              <label className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="type"
+                  value="general"
+                  checked={type === "general"}
+                  onChange={() => setType("general")}
+                />
+                <span></span> সাধারণ
+              </label>
             </div>
           </div>
 
@@ -97,7 +123,7 @@ const AddIlmModal = ({ onClose }) => {
             <input
               type="text"
               name="title"
-              placeholder="হাদিস/কুরআনের বিষয়"
+              placeholder="হাদিস/কুরআনের/সাধারণ বিষয়"
               onChange={handleChange}
               value={formData.title}
               required
@@ -105,34 +131,92 @@ const AddIlmModal = ({ onClose }) => {
           </div>
 
           {type === "quran" && (
-            <div className={styles.rowFields}>
+            <>
               <div className={styles.formGroup}>
-                <label>Surah No.</label>
-                <input
-                  type="number"
-                  name="surah"
-                  value={formData.surah}
-                  onChange={(e) =>
-                    setFormData({ ...formData, surah: e.target.value })
-                  }
-                  placeholder="সুরাহ নাম্বার"
-                  required
-                />
+                <label>Line Type</label>
+                <div className={styles.radioGroup}>
+                  <label className={styles.radioLabel}>
+                    <input
+                      type="radio"
+                      name="lineType"
+                      value="one"
+                      checked={lineType === "one"}
+                      onChange={() => setLineType("one")}
+                    />
+                    <span></span> One Line
+                  </label>
+
+                  <label className={styles.radioLabel}>
+                    <input
+                      type="radio"
+                      name="lineType"
+                      value="multiple"
+                      checked={lineType === "multiple"}
+                      onChange={() => setLineType("multiple")}
+                    />
+                    <span></span> Multiple Line
+                  </label>
+                </div>
               </div>
-              <div className={styles.formGroup}>
-                <label>Verse No.</label>
-                <input
-                  type="number"
-                  name="verse"
-                  value={formData.verse}
-                  onChange={(e) =>
-                    setFormData({ ...formData, verse: e.target.value })
-                  }
-                  placeholder="আয়াত নাম্বার"
-                  required
-                />
+
+              {/* Surah number always shown */}
+              <div className={styles.rowFields}>
+                <div className={styles.formGroup}>
+                  <label>Surah No.</label>
+                  <input
+                    type="number"
+                    name="surah"
+                    value={formData.surah}
+                    onChange={handleChange}
+                    placeholder="সুরাহ নাম্বার"
+                    required
+                  />
+                </div>
+
+                {/* One Line → show Verse */}
+                {lineType === "one" && (
+                  <div className={styles.formGroup}>
+                    <label>Verse No.</label>
+                    <input
+                      type="number"
+                      name="verse"
+                      value={formData.verse}
+                      onChange={handleChange}
+                      placeholder="আয়াত নাম্বার"
+                      required
+                    />
+                  </div>
+                )}
               </div>
-            </div>
+
+              {/* Multiple Line → show starting & ending verse */}
+              {lineType === "multiple" && (
+                <div className={styles.rowFields}>
+                  <div className={styles.formGroup}>
+                    <label>Starting Verse</label>
+                    <input
+                      type="number"
+                      name="startingVerse"
+                      value={formData.startingVerse}
+                      onChange={handleChange}
+                      placeholder="শুরুর আয়াত"
+                      required
+                    />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label>Ending Verse</label>
+                    <input
+                      type="number"
+                      name="endingVerse"
+                      value={formData.endingVerse}
+                      onChange={handleChange}
+                      placeholder="শেষের আয়াত"
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {type === "hadith" && (
@@ -166,28 +250,44 @@ const AddIlmModal = ({ onClose }) => {
             </div>
           )}
 
-          <div className={styles.formGroup}>
-            <label>Arabic</label>
-            <textarea
-              name="arabic"
-              placeholder="Write Arabic text..."
-              className={styles.arabic}
-              onChange={handleChange}
-              value={formData.arabic}
-              required
-            ></textarea>
-          </div>
+          {type !== "general" && (
+            <>
+              <div className={styles.formGroup}>
+                <label>Arabic</label>
+                <textarea
+                  name="arabic"
+                  placeholder="আরবীতে লিখুন..."
+                  className={styles.arabic}
+                  onChange={handleChange}
+                  value={formData.arabic}
+                  required
+                ></textarea>
+              </div>
 
-          <div className={styles.formGroup}>
-            <label>Bangla Meaning</label>
-            <textarea
-              name="bangla"
-              placeholder="বাংলা অর্থ লিখুন..."
-              onChange={handleChange}
-              value={formData.bangla}
-              required
-            ></textarea>
-          </div>
+              <div className={styles.formGroup}>
+                <label>Bangla Meaning</label>
+                <textarea
+                  name="bangla"
+                  placeholder="বাংলা অর্থ লিখুন..."
+                  onChange={handleChange}
+                  value={formData.bangla}
+                  required
+                ></textarea>
+              </div>
+            </>
+          )}
+
+          {type === "general" && (
+            <div className={styles.formGroup}>
+              <label>Answer</label>
+              <textarea
+                name="answer"
+                value={formData.answer}
+                onChange={handleChange}
+                placeholder="উত্তর লিখুন ..."
+              ></textarea>
+            </div>
+          )}
 
           <div className={styles.actions}>
             <button type="button" onClick={onClose} className={styles.cancel}>

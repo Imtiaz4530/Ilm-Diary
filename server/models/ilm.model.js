@@ -13,21 +13,26 @@ const ilmSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["quran", "hadith"],
+      enum: ["quran", "hadith", "general"],
       required: true,
     },
     arabic: {
       type: String,
-      required: true,
+
       trim: true,
+      required: function () {
+        return this.type === "quran" || this.type === "hadith";
+      },
     },
     bangla: {
       type: String,
-      required: true,
+      required: function () {
+        return this.type === "quran" || this.type === "hadith";
+      },
       trim: true,
     },
     surah: {
-      type: Number,
+      type: String,
       required: function () {
         return this.type === "quran";
       },
@@ -35,9 +40,23 @@ const ilmSchema = new mongoose.Schema(
     verse: {
       type: Number,
       required: function () {
-        return this.type === "quran";
+        return this.lineType === "one" && this.type === "quran";
       },
     },
+
+    startingVerse: {
+      type: Number,
+      required: function () {
+        return this.lineType === "multiple" && this.type === "quran";
+      },
+    },
+    endingVerse: {
+      type: Number,
+      required: function () {
+        return this.lineType === "multiple" && this.type === "quran";
+      },
+    },
+
     book: {
       type: String,
       required: function () {
@@ -48,6 +67,21 @@ const ilmSchema = new mongoose.Schema(
       type: Number,
       required: function () {
         return this.type === "hadith";
+      },
+    },
+
+    lineType: {
+      type: String,
+      enum: ["one", "multiple"],
+      required: function () {
+        return this.type === "quran";
+      },
+    },
+    answer: {
+      type: String,
+      trim: true,
+      required: function () {
+        return this.type === "general";
       },
     },
   },

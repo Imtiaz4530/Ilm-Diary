@@ -47,3 +47,9 @@ export const login = async (data) => {
   const res = await API.post(`/user/login`, data);
   return res.data;
 };
+
+// 🟢 records for single user
+export const recordsForUser = async () => {
+  const res = await API.get(`/profile/posts`);
+  return res.data;
+};

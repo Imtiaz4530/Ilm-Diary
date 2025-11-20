@@ -19,17 +19,25 @@ const Home = ({ records, loading }) => {
   useEffect(() => {
     setCurrentPage(1);
   }, [search, filter]);
+
   const filteredRecords = records?.filter((item) => {
     const matchesSearch = item?.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+      ?.toLowerCase()
+      ?.includes(search.toLowerCase());
 
-    const matchesFilter =
-      filter === "bookmark"
-        ? user?.bookmarks?.includes(item?._id)
-        : filter
-        ? item?.type === filter
-        : true;
+    let matchesFilter = true;
+
+    if (filter === "quran") {
+      matchesFilter = item.type === "quran";
+    } else if (filter === "hadith") {
+      matchesFilter = item.type === "hadith";
+    } else if (filter === "bookmark") {
+      matchesFilter = user?.bookmarks?.includes(item._id);
+    } else if (filter === "general") {
+      matchesFilter = item.type === "general";
+    } else {
+      matchesFilter = item.type === "quran" || item.type === "hadith";
+    }
 
     return matchesSearch && matchesFilter;
   });
@@ -58,7 +66,6 @@ const Home = ({ records, loading }) => {
 
   return (
     <div className={styles.container}>
-      {/* <h2 className={styles.heading}>📗 Quran /📘 Hadith</h2> */}
       <h2 className={styles.heading}>Ilm Records</h2>
 
       <input
@@ -103,6 +110,17 @@ const Home = ({ records, loading }) => {
           <span></span> হাদিস
         </label>
 
+        <label className={styles.radioLabel}>
+          <input
+            type="radio"
+            name="filter"
+            value="general"
+            checked={filter === "general"}
+            onChange={() => setFilter("general")}
+          />
+          <span></span> সাধারণ
+        </label>
+
         {user && (
           <label className={styles.radioLabel}>
             <input
@@ -122,7 +140,6 @@ const Home = ({ records, loading }) => {
           <div className={styles.noData}>
             <p className={styles.noIcon}>📭</p>
             <p className={styles.noText}>কোনো তথ্য পাওয়া যায়নি</p>
-            <p className={styles.noSub}>নতুন একটি রেকর্ড যোগ করুন...</p>
           </div>
         ) : (
           currentRecords?.map((item) => (
@@ -132,20 +149,45 @@ const Home = ({ records, loading }) => {
               onClick={() => navigate(`/view/${item._id}`)}
             >
               <div className={styles.type}>
-                {item.type === "quran" ? "📗 Quran" : "📘 Hadith"}
+                {item.type === "quran"
+                  ? "📗 Quran"
+                  : item.type === "hadith"
+                  ? "📘 Hadith"
+                  : "📝 General"}
               </div>
 
               <h3 className={styles.title}>{item.title}</h3>
 
-              <p className={styles.arabic}>{limitText(item.arabic, 120)}</p>
-              <p className={styles.bangla}>{limitText(item.bangla, 180)}</p>
+              {(item.type === "quran" || item.type === "hadith") && (
+                <>
+                  <p className={styles.arabic}>{limitText(item.arabic, 120)}</p>
+                  <p className={styles.bangla}>{limitText(item.bangla, 180)}</p>
+                </>
+              )}
+
+              {item.type === "general" && (
+                <p className={styles.bangla}>{limitText(item.answer, 200)}</p>
+              )}
 
               <div className={styles.refRow}>
-                <span className={styles.ref}>
-                  {item.type === "quran"
-                    ? `Surah ${item.surah} • Ayah ${item.verse}`
-                    : `${item.book} • Hadith ${item.hadithNo}`}
-                </span>
+                {(item.type === "quran" || item.type === "hadith") && (
+                  <span className={styles.ref}>
+                    {item.type === "quran" ? (
+                      <>
+                        <span className={styles.hiddenTitle}>সূরা</span>{" "}
+                        {item.surah} •{" "}
+                        <span className={styles.hiddenTitle}>আয়াত</span>{" "}
+                        {item.lineType === "multiple"
+                          ? `${item.startingVerse}-${item.endingVerse}`
+                          : item.verse}
+                      </>
+                    ) : (
+                      <>
+                        {item.book} • হাদিস {item.hadithNo}
+                      </>
+                    )}
+                  </span>
+                )}
 
                 <span className={styles.ref}>
                   Created By{" "}

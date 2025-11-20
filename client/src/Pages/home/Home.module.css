@@ -187,11 +187,6 @@
   margin-bottom: 5px;
 }
 
-.noSub {
-  font-size: 14px;
-  color: #777;
-}
-
 .creator {
   font-size: 16px;
   color: #cfcfcf;
@@ -216,5 +211,9 @@
 
   .creator {
     font-size: 13px;
+  }
+
+  .hiddenTitle {
+    display: none;
   }
 }
