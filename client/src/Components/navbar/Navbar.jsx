@@ -7,6 +7,8 @@ import AddIlmModal from "../addIlmModal/AddIlmModal";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
+// onClick={() => handlePageChange(currentPage - 1)}
+
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
 
@@ -15,10 +17,14 @@ const Navbar = () => {
 
   const role = user?.role;
 
+  const handlePageChange = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       <nav className={styles.navbar}>
-        <Link to="/" className={styles.brand}>
+        <Link to="/" className={styles.brand} onClick={handlePageChange}>
           Ilm Diary
         </Link>
 
