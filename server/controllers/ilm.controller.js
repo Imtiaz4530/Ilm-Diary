@@ -61,6 +61,12 @@ const createIlmRecord = async (req, res) => {
         .json({ message: "Answer is required for General type" });
     }
 
+    if (type === "dua" && (!bangla || !arabic)) {
+      return res
+        .status(400)
+        .json({ message: "Arabic and Bangla are required for Dua type" });
+    }
+
     const creator = await User.findById(id).then((user) => user.username);
     const surahName = surahNames[Number(surah) - 1];
 

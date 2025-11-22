@@ -154,7 +154,7 @@ const ViewIlm = ({ records, loading }) => {
       <div className={styles.refRow}>
         {record.type !== "general" && (
           <span className={styles.ref}>
-            {record.type === "quran" ? (
+            {record.type === "quran" && (
               <>
                 <span className={styles.hiddenTitle}>সূরা</span> {record.surah}{" "}
                 • <span className={styles.hiddenTitle}>আয়াত</span>{" "}
@@ -162,7 +162,9 @@ const ViewIlm = ({ records, loading }) => {
                   ? `${record.startingVerse}-${record.endingVerse}`
                   : record.verse}
               </>
-            ) : (
+            )}
+
+            {record.type === "hadith" && (
               <>
                 {record.book} • হাদিস {record.hadithNo}
               </>

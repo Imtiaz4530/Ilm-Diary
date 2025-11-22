@@ -13,7 +13,7 @@ const ilmSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["quran", "hadith", "general"],
+      enum: ["quran", "hadith", "general", "dua"],
       required: true,
     },
     arabic: {

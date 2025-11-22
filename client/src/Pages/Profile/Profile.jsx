@@ -1,10 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import styles from "./Profile.module.css";
 import { AuthContext } from "../../context/AuthContext";
 import Loading from "../../Components/loading/Loading";
 import { useNavigate } from "react-router-dom";
 import { recordsForUser } from "../../api/ilmApi";
+import Filter from "../../Components/Filter/Filter";
+import Pagination from "../../Components/Pagination/Pagination";
+import useLimitText from "../../hooks/useLimitText";
+import useProfile from "../../hooks/useProfile";
+import NoRecords from "../../Components/NoRecords/NoRecords";
+import Info from "../../Components/Info/Info";
 
 const Profile = () => {
   const { user } = useContext(AuthContext);
@@ -12,6 +18,13 @@ const Profile = () => {
 
   const [filter, setFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 12;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, filter]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["user-records"],
@@ -20,45 +33,21 @@ const Profile = () => {
 
   const userRecords = data || [];
 
-  // const filtered = userRecords.filter((item) => {
-  //   const matchesSearch = item.title
-  //     .toLowerCase()
-  //     .includes(search.toLowerCase());
-  //   const matchesFilter =
-  //     filter === "bookmark"
-  //       ? user?.bookmarks?.includes(item._id)
-  //       : filter
-  //       ? item.type === filter
-  //       : true;
-  //   return matchesSearch && matchesFilter;
-  // });
+  const { filtered } = useProfile(userRecords, search, filter, user);
 
-  const filtered = userRecords?.filter((item) => {
-    const matchesSearch = item?.title
-      ?.toLowerCase()
-      ?.includes(search.toLowerCase());
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-    let matchesFilter = true;
+  const currentRecords = filtered?.slice(indexOfFirstItem, indexOfLastItem);
 
-    if (filter === "quran") {
-      matchesFilter = item.type === "quran";
-    } else if (filter === "hadith") {
-      matchesFilter = item.type === "hadith";
-    } else if (filter === "bookmark") {
-      matchesFilter = user?.bookmarks?.includes(item._id);
-    } else if (filter === "general") {
-      matchesFilter = item.type === "general";
-    } else {
-      matchesFilter = item.type === "quran" || item.type === "hadith";
-    }
+  const totalPages = Math.ceil(filtered?.length / itemsPerPage);
 
-    return matchesSearch && matchesFilter;
-  });
-
-  const limitText = (text, limit) => {
-    if (text.length <= limit) return text;
-    return text.slice(0, limit) + " ...";
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const { limitText } = useLimitText();
 
   if (isLoading) return <Loading />;
 
@@ -89,78 +78,19 @@ const Profile = () => {
 
       {/* Records Section */}
       <div className={styles.recordsSection}>
-        <input
-          type="text"
-          className={styles.search}
-          placeholder="Search your posts..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+        <Filter
+          search={search}
+          setSearch={setSearch}
+          filter={filter}
+          setFilter={setFilter}
+          user={user}
         />
 
-        <div className={styles.radioGroup}>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="filter"
-              checked={filter === ""}
-              onChange={() => setFilter("")}
-            />
-            <span></span> All
-          </label>
-
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="filter"
-              value="quran"
-              checked={filter === "quran"}
-              onChange={() => setFilter("quran")}
-            />
-            <span></span> Quran
-          </label>
-
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="filter"
-              value="hadith"
-              checked={filter === "hadith"}
-              onChange={() => setFilter("hadith")}
-            />
-            <span></span> Hadith
-          </label>
-
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="filter"
-              value="general"
-              checked={filter === "general"}
-              onChange={() => setFilter("general")}
-            />
-            <span></span> সাধারণ
-          </label>
-
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="filter"
-              value="bookmark"
-              checked={filter === "bookmark"}
-              onChange={() => setFilter("bookmark")}
-            />
-            <span></span> Favorite
-          </label>
-        </div>
-
         <div className={styles.list}>
-          {filtered.length === 0 ? (
-            <div className={styles.noData}>
-              <p className={styles.noIcon}>📭</p>
-              <p className={styles.noText}>কোনো তথ্য পাওয়া যায়নি</p>
-            </div>
+          {currentRecords.length === 0 ? (
+            <NoRecords />
           ) : (
-            filtered.map((item) => (
+            currentRecords.map((item) => (
               <div
                 key={item._id}
                 className={styles.card}
@@ -192,22 +122,7 @@ const Profile = () => {
                 )}
 
                 <div className={styles.refRow}>
-                  <span className={styles.ref}>
-                    {item.type === "quran" ? (
-                      <>
-                        <span className={styles.hiddenTitle}>সূরা</span>{" "}
-                        {item.surah} •{" "}
-                        <span className={styles.hiddenTitle}>আয়াত</span>{" "}
-                        {item.lineType === "multiple"
-                          ? `${item.startingVerse}-${item.endingVerse}`
-                          : item.verse}
-                      </>
-                    ) : (
-                      <>
-                        {item.book} • হাদিস {item.hadithNo}
-                      </>
-                    )}
-                  </span>
+                  <Info item={item} />
 
                   <span className={styles.ref}>
                     {new Date(item.createdAt).toLocaleDateString("bn-BD")}
@@ -218,6 +133,11 @@ const Profile = () => {
           )}
         </div>
       </div>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handlePageChange={handlePageChange}
+      />
     </div>
   );
 };

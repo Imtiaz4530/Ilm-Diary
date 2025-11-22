@@ -109,6 +109,17 @@ const AddIlmModal = ({ onClose }) => {
                 <input
                   type="radio"
                   name="type"
+                  value="dua"
+                  checked={type === "dua"}
+                  onChange={() => setType("dua")}
+                />
+                <span></span> দোয়া
+              </label>
+
+              <label className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="type"
                   value="general"
                   checked={type === "general"}
                   onChange={() => setType("general")}

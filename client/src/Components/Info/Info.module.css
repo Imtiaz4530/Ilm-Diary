@@ -1,0 +1,14 @@
+.ref {
+  font-size: 13px;
+  color: #777;
+}
+
+@media screen and (max-width: 400px) {
+  .ref {
+    font-size: 11px;
+  }
+
+  .hiddenTitle {
+    display: none;
+  }
+}

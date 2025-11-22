@@ -1,0 +1,73 @@
+/* ✅ Search Input */
+.search {
+  width: 100%;
+  padding: 10px;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-radius: 6px;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.search::placeholder {
+  color: #777;
+}
+
+/* ✅ Radio Filter */
+.radioGroup {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.radioLabel {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* hide default radio */
+.radioLabel input {
+  position: absolute;
+  opacity: 0;
+}
+
+/* custom circle */
+.radioLabel input + span {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #0a0a0a;
+  border: 2px solid #4ea685;
+  border-radius: 50%;
+}
+
+/* checked */
+.radioLabel input:checked + span {
+  background: #4ea685;
+}
+
+/* inner dot */
+.radioLabel input:checked + span::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  background: #0a0a0a;
+  border-radius: 50%;
+}
+
+@media screen and (max-width: 520px) {
+  .radioGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
